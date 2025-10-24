@@ -63,14 +63,6 @@ const ChatInterface = () => {
           ) : (
             messages.map((message) => (
               <Message key={message.id} from={message.role}>
-                <MessageAvatar
-                  src={
-                    message.role === "user"
-                      ? "https://api.dicebear.com/7.x/avataaars/svg?seed=user"
-                      : "https://api.dicebear.com/7.x/bottts/svg?seed=rabbit"
-                  }
-                  name={message.role === "user" ? "You" : "AI"}
-                />
                 <MessageContent>
                   {message.parts.map((part, index) => {
                     if (part.type === "text") {
