@@ -36,7 +36,8 @@ export async function proxy(request: NextRequest) {
   }
 
   // Redirect non-logged-in users trying to access protected routes
-  if (!user && request.nextUrl.pathname !== '/login' && !request.nextUrl.pathname.startsWith('/auth')) {
+  // Allow /auth/callback for OAuth flow
+  if (!user && request.nextUrl.pathname !== '/login' && !request.nextUrl.pathname.startsWith('/auth') && !request.nextUrl.pathname.startsWith('/api')) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
