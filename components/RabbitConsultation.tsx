@@ -26,6 +26,17 @@ import {
 } from "@/components/ai-elements/prompt-input";
 import { Response } from "@/components/ai-elements/response";
 import { MessageCircle } from "lucide-react";
+import { RabbitRabbitChatMessage } from "@/app/api/chat/route";
+
+const convertToUIMessages = (messages: any[]): RabbitRabbitChatMessage[] => {
+  if (!messages) return [];
+
+  return messages.map((msg) => ({
+    id: msg.id,
+    role: msg.role,
+    parts: msg.parts,
+  }));
+};
 
 const ChatInterface = () => {
   const transport = useMemo(
@@ -38,8 +49,8 @@ const ChatInterface = () => {
 
   const { messages, sendMessage, status } = useChat({
     transport,
+    messages: convertToUIMessages([]),
   });
-  const controller = usePromptInputController();
 
   return (
     <div className="flex h-screen w-full flex-col bg-background">
@@ -65,10 +76,71 @@ const ChatInterface = () => {
               <Message key={message.id} from={message.role}>
                 <MessageContent>
                   {message.parts.map((part, index) => {
-                    if (part.type === "text") {
-                      return <Response key={index}>{part.text}</Response>;
+                    switch (part.type) {
+                      case "text":
+                        return <Response key={index}>{part.text}</Response>;
+
+                      case "tool-convertPaceTool":
+                        switch (part.state) {
+                          case "output-available":
+                            return (
+                              <Response key={part.toolCallId}>
+                                Pace converted
+                              </Response>
+                            );
+
+                          case "input-available":
+                          case "input-streaming":
+                          default:
+                            return (
+                              <Response key={part.toolCallId}>
+                                Converting Pace...
+                              </Response>
+                            );
+                        }
+                      case "tool-generateSingleRunningStepTool":
+                        switch (part.state) {
+                          case "input-available":
+                          case "input-streaming":
+                          default:
+                            return (
+                              <Response key={part.toolCallId}>
+                                Generating Step...
+                              </Response>
+                            );
+                        }
+                      case "tool-generateRunningSegmentTool":
+                        switch (part.state) {
+                          case "input-available":
+                          case "input-streaming":
+                          default:
+                            return (
+                              <Response key={part.toolCallId}>
+                                Generating Segment...
+                              </Response>
+                            );
+                        }
+                      case "tool-generateRunningWorkoutTool":
+                        switch (part.state) {
+                          case "output-available":
+                            return (
+                              <Response key={`${part.toolCallId}-output`}>
+                                {JSON.stringify(part.output, null, 2)}
+                              </Response>
+                            );
+
+                          case "input-available":
+                          case "input-streaming":
+                          default:
+                            return (
+                              <Response key={part.toolCallId}>
+                                Generating Workout...
+                              </Response>
+                            );
+                        }
+                      default:
+                        return null;
                     }
-                    return null;
                   })}
                 </MessageContent>
               </Message>

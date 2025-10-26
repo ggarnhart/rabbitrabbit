@@ -120,3 +120,5 @@
     @apply bg-background text-foreground;
   }
 }
+
+@source "../node_modules/streamdown/dist/index.js";
