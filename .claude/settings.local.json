@@ -7,7 +7,10 @@
       "WebFetch(domain:sdk.vercel.ai)",
       "WebFetch(domain:ai-sdk.dev)",
       "Bash(npx tsc:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(npm install:*)",
+      "Read(//Users/greggarnhart/.docker/**)",
+      "Bash(docker compose:*)"
     ],
     "deny": [],
     "ask": []
