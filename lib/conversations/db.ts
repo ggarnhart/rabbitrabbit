@@ -1,6 +1,7 @@
 import { RabbitRabbitChatMessage } from "@/app/api/chat/route";
 import { createClient } from "@/lib/supabase/server";
 import { UIMessage } from "ai";
+import { nanoid } from "nanoid";
 
 export interface Conversation {
   id: string;
@@ -130,7 +131,7 @@ export async function saveMessages(
 
   await supabase.from("messages").upsert(
     messages.map((m) => ({
-      id: m.id === "" ? crypto.randomUUID() : m.id, // server-generated stable id
+      id: m.id === "" ? nanoid() : m.id, // server-generated stable id
       conversation_id: conversationId,
       role: m.role,
       parts: m.parts, // full parts, as-is

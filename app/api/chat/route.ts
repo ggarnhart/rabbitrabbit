@@ -12,7 +12,7 @@ import {
   UIMessage,
 } from "ai";
 import { saveMessages } from "@/lib/conversations/db";
-import { nanoid } from "nanoid";
+import { anthropic } from "@ai-sdk/anthropic";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -39,42 +39,19 @@ export async function POST(req: Request) {
     return new Response("No conversation ID provided", { status: 400 });
   }
 
-  // Debug: Log incoming messages
-  console.log(`Processing ${messages.length} messages`);
-  messages.forEach((msg, idx) => {
-    const partTypes = msg.parts?.map(p => (p as any).type).join(", ") || "none";
-    console.log(`  Message ${idx} (${msg.role}): ${msg.parts?.length || 0} parts [${partTypes}]`);
-  });
-
   const modelMessages = convertToModelMessages(messages);
 
   // Debug: Log converted messages
   console.log(`Converted to ${modelMessages.length} model messages`);
 
   const result = streamText({
-    model: openai("gpt-5"),
+    // model: openai("gpt-4.1"),
+    model: anthropic("claude-haiku-4-5"),
     system: runningPrompt,
     tools: runningToolset,
     messages: modelMessages,
     stopWhen: stepCountIs(100), // Enable multi-step, stop after 100 steps
-    onStepFinish: ({ stepType, text, toolCalls, toolResults, finishReason }) => {
-      console.log(`Step finished - Type: ${stepType}, Reason: ${finishReason}`);
-      if (text) console.log(`  Text: ${text.substring(0, 100)}...`);
-      if (toolCalls && toolCalls.length > 0) {
-        console.log(`  Tool calls: ${toolCalls.map((tc) => tc.toolName).join(", ")}`);
-      }
-      if (toolResults && toolResults.length > 0) {
-        console.log(`  Tool results: ${toolResults.length} results`);
-      }
-    },
-    onFinish: ({ text, toolCalls, toolResults, finishReason, usage }) => {
-      console.log(`\n=== STREAM FINISHED ===`);
-      console.log(`Finish reason: ${finishReason}`);
-      console.log(`Total steps: ${usage?.steps || 0}`);
-      console.log(`Text generated: ${text?.substring(0, 100) || "none"}...`);
-      console.log(`Tool calls: ${toolCalls?.length || 0}`);
-      console.log(`======================\n`);
-    },
+
     onError: (error) => {
       console.error("Error during chat processing:", error);
     },
