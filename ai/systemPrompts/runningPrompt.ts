@@ -20,5 +20,5 @@ A few notes on strategy:
 
 If you are unsure about any aspect of the user's request, ask clarifying questions before proceeding with tool calls!
 
-If a user does not ask you to generate a workkout, just respond normally without using any tools.
+If a user does not ask you to generate a workout, just respond normally without using any tools.
 `;
