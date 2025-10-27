@@ -20,6 +20,11 @@ import {
   PromptInputTextarea,
 } from "@/components/ai-elements/prompt-input";
 import { Response } from "@/components/ai-elements/response";
+import {
+  Reasoning,
+  ReasoningTrigger,
+  ReasoningContent,
+} from "@/components/ai-elements/reasoning";
 import { MessageCircle, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Message as DBMessage } from "@/lib/conversations/db";
@@ -121,13 +126,32 @@ const ChatInterface = ({
                 icon={<MessageCircle className="size-12" />}
               />
             ) : (
-              messages.map((message) => (
-                <Message key={message.id} from={message.role}>
-                  <MessageContent>
-                    {message.parts.map((part, index) => {
-                      switch (part.type) {
-                        case "text":
-                          return <Response key={index}>{part.text}</Response>;
+              messages.map((message, messageIndex) => {
+                // Check if this is the last message and if we're currently streaming
+                const isLastMessage = messageIndex === messages.length - 1;
+                const isStreamingMessage =
+                  isLastMessage && (status === "submitted" || status === "streaming");
+
+                return (
+                  <Message key={message.id} from={message.role}>
+                    <MessageContent>
+                      {message.parts.map((part, index) => {
+                        switch (part.type) {
+                          case "text":
+                            return <Response key={index}>{part.text}</Response>;
+
+                          case "reasoning":
+                            return (
+                              <Reasoning
+                                key={index}
+                                isStreaming={isStreamingMessage}
+                              >
+                                <ReasoningTrigger />
+                                <ReasoningContent>
+                                  {(part as any).text || ""}
+                                </ReasoningContent>
+                              </Reasoning>
+                            );
 
                         case "tool-convertPaceTool":
                           switch (part.state) {
@@ -187,13 +211,22 @@ const ChatInterface = ({
                                 </Response>
                               );
                           }
-                        default:
+
+                        case "step-start":
+                        case "step-finish":
+                          // These are metadata parts, don't render them
                           return null;
-                      }
-                    })}
-                  </MessageContent>
-                </Message>
-              ))
+
+                        default:
+                          // Log unknown parts for debugging
+                          console.log("Unknown part type:", part.type);
+                          return null;
+                        }
+                      })}
+                    </MessageContent>
+                  </Message>
+                );
+              })
             )}
           </ConversationContent>
           <ConversationScrollButton />
