@@ -11,6 +11,7 @@ import {
   UIDataTypes,
   UIMessage,
 } from "ai";
+import { saveMessages } from "@/lib/conversations/db";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -20,13 +21,21 @@ export type RabbitRabbitChatMessage = UIMessage<
   UIDataTypes,
   RunningToolsetTools
 >;
+
 export async function POST(req: Request) {
   const body = await req.json();
+  const { searchParams } = new URL(req.url);
+  const conversationId = searchParams.get("conversationId");
 
   const { messages }: { messages: UIMessage[] } = body;
 
   if (!messages) {
     return new Response("No messages provided", { status: 400 });
+  }
+
+  if (!conversationId) {
+    console.log("No conversation ID provided");
+    return new Response("No conversation ID provided", { status: 400 });
   }
 
   const result = streamText({
@@ -40,5 +49,11 @@ export async function POST(req: Request) {
     },
   });
 
-  return result.toUIMessageStreamResponse();
+  return result.toUIMessageStreamResponse({
+    originalMessages: messages,
+
+    onFinish: async ({ messages }) => {
+      await saveMessages(conversationId, messages);
+    },
+  });
 }
