@@ -104,3 +104,11 @@ export const RunningRepeatStepSchema = z.object({
     "Type of repeat action"
   ),
 });
+
+export const RunningRepeatStepInputSchema = RunningRepeatStepSchema.extend({
+  context: z.string().describe("Context for the repetitive running step."),
+  stepNumber: z
+    .number()
+    .optional()
+    .describe("The step number in the sequence."),
+});
