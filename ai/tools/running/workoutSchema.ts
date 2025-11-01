@@ -8,3 +8,5 @@ export const CreateWorkoutSchema = z.object({
   workoutSourceId: z.string().describe("Unique Identifier from RabbitRabbit"),
   segments: z.array(RunningSegmentSchema),
 });
+
+export type CreateWorkoutType = z.infer<typeof CreateWorkoutSchema>;

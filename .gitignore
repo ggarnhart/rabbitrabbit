@@ -42,3 +42,4 @@ next-env.d.ts
 
 pg.json
 documentation/GarminAuthAPI.pdf
+documentation/GarminTrainingAPI.pdf
