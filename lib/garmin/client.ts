@@ -220,7 +220,7 @@ export class GarminClient {
 
     const { data: userData, error: userError } = await supabase
       .from("users")
-      .select("garmin_api_token")
+      .select("garmin_api_token, garmin_api_refresh_token")
       .eq("id", this.userId)
       .single();
 
@@ -228,7 +228,52 @@ export class GarminClient {
       throw new Error("User not authenticated with Garmin");
     }
 
-    const tokenData: TokenData = JSON.parse(userData.garmin_api_token);
+    let tokenData: TokenData;
+
+    // Handle both old format (raw token string) and new format (JSON TokenData)
+    try {
+      const parsed = JSON.parse(userData.garmin_api_token);
+
+      // Check if it's the new format with TokenData structure
+      if (parsed.accessToken && parsed.expiresAt) {
+        tokenData = parsed;
+      } else {
+        await this.refreshAccessToken();
+
+        // Fetch the new token
+        const { data: newUserData } = await supabase
+          .from("users")
+          .select("garmin_api_token")
+          .eq("id", this.userId)
+          .single();
+
+        if (!newUserData?.garmin_api_token) {
+          throw new Error("Failed to get refreshed token");
+        }
+
+        tokenData = JSON.parse(newUserData.garmin_api_token);
+        return tokenData.accessToken;
+      }
+    } catch (e) {
+      // If parsing fails, it's likely a raw token string (legacy format)
+      // Refresh to migrate to new format
+
+      await this.refreshAccessToken();
+
+      // Fetch the new token
+      const { data: newUserData } = await supabase
+        .from("users")
+        .select("garmin_api_token")
+        .eq("id", this.userId)
+        .single();
+
+      if (!newUserData?.garmin_api_token) {
+        throw new Error("Failed to get refreshed token");
+      }
+
+      tokenData = JSON.parse(newUserData.garmin_api_token);
+      return tokenData.accessToken;
+    }
 
     // Check if access token is expired (with some buffer)
     if (Date.now() >= tokenData.expiresAt) {
@@ -271,12 +316,15 @@ export class GarminClient {
 
     if (!response.ok) {
       const errorText = await response.text();
+      console.error("Garmin API error response:", errorText);
       throw new Error(
-        `Garmin API request failed: ${response.status} ${errorText}`
+        `Garmin API request failed: ${response.status} ${response.statusText}\n${errorText}`
       );
     }
 
-    return response.json();
+    const data = await response.json();
+
+    return data;
   }
 
   /**
@@ -336,6 +384,7 @@ export class GarminClient {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "User-Agent": "RabbitRabbit/1.0",
         },
         body: JSON.stringify(workoutData),
       }

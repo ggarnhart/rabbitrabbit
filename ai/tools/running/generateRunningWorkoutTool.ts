@@ -2,7 +2,6 @@ import { tool } from "ai";
 import { z } from "zod";
 import { RunningSegmentSchema } from "./runningSegmentSchema";
 import { CreateWorkoutSchema } from "./workoutSchema";
-import { nanoid } from "nanoid";
 
 export const generateRunningWorkoutTool = tool({
   name: "generateRunningWorkout",
@@ -36,7 +35,7 @@ export const generateRunningWorkoutTool = tool({
       description: description || "",
       sport: "RUNNING" as const,
       workoutProvider: "RabbitRabbit" as const,
-      workoutSourceId: nanoid(),
+      workoutSourceId: "RabbitRabbit" as const,
       segments: segments,
     };
   },

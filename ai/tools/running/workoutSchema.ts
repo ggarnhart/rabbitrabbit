@@ -5,7 +5,9 @@ export const CreateWorkoutSchema = z.object({
   description: z.string().optional(),
   sport: z.literal("RUNNING"),
   workoutProvider: z.literal("RabbitRabbit"),
-  workoutSourceId: z.string().describe("Unique Identifier from RabbitRabbit"),
+  workoutSourceId: z.literal("RabbitRabbit").describe(
+    "Must match workoutProvider for Garmin API"
+  ),
   segments: z.array(RunningSegmentSchema),
   conversationId: z
     .string()

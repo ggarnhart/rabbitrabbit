@@ -70,7 +70,7 @@ export const RunningStepSchema = z.object({
   durationValueType: DurationValueType.optional().describe(
     "If durationType is `HR` or `POWER`, include this"
   ),
-  stepNumber: z.number().describe("The step number in the sequence."),
+  stepOrder: z.number().describe("The step order in the sequence."),
   targetType: TargetTypeEnum,
   targetValue: TargetValue.optional().describe(
     "Included when using HR or Power as TargetType"
@@ -107,8 +107,5 @@ export const RunningRepeatStepSchema = z.object({
 
 export const RunningRepeatStepInputSchema = RunningRepeatStepSchema.extend({
   context: z.string().describe("Context for the repetitive running step."),
-  stepNumber: z
-    .number()
-    .optional()
-    .describe("The step number in the sequence."),
+  stepOrder: z.number().optional().describe("The step number in the sequence."),
 });
