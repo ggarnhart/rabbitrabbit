@@ -4,6 +4,7 @@ import { generateRepetitiveRunningStepTool } from "./generateRepetitiveRunningSt
 import { generateSingleRunningStepTool } from "./generateSingleRunningStepTool";
 import { generateRunningSegmentTool } from "./generateRunningSegmentTool";
 import { generateRunningWorkoutTool } from "./generateRunningWorkoutTool";
+import { saveToGarminTool } from "./saveToGarmin";
 
 export const runningToolset = {
   convertPaceTool: convertPaceTool,
@@ -11,6 +12,7 @@ export const runningToolset = {
   generateRepetitiveRunningStepTool: generateRepetitiveRunningStepTool,
   generateRunningSegmentTool: generateRunningSegmentTool,
   generateRunningWorkoutTool: generateRunningWorkoutTool,
+  saveToGarminTool: saveToGarminTool,
 };
 
 export type RunningToolsetTools = InferUITools<typeof runningToolset>;

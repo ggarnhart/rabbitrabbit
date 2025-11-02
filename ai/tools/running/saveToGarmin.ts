@@ -6,8 +6,8 @@ export const saveToGarminTool = tool({
   name: "saveToGarmin",
   inputSchema: CreateWorkoutSchema,
   description:
-    "Saves the generated running workout to the user's Garmin Account.",
+    "Saves the generated running workout to the user's Garmin Account. After completion, let the user know you've created the workout",
   execute: async (workout) => {
-    saveWorkout(workout, true);
+    await saveWorkout(workout, workout.conversationId, true);
   },
 });

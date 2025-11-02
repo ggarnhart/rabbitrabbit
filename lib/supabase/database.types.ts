@@ -92,8 +92,8 @@ export type Database = {
           deleted_at: string | null
           id: string
           metadata: Json | null
-          parts: Json | null
-          role: string
+          parts: Json
+          role: Database["public"]["Enums"]["message_type"]
           updated_at: string
         }
         Insert: {
@@ -102,8 +102,8 @@ export type Database = {
           deleted_at?: string | null
           id: string
           metadata?: Json | null
-          parts?: Json | null
-          role: string
+          parts: Json
+          role?: Database["public"]["Enums"]["message_type"]
           updated_at?: string
         }
         Update: {
@@ -112,8 +112,8 @@ export type Database = {
           deleted_at?: string | null
           id?: string
           metadata?: Json | null
-          parts?: Json | null
-          role?: string
+          parts?: Json
+          role?: Database["public"]["Enums"]["message_type"]
           updated_at?: string
         }
         Relationships: [
@@ -224,7 +224,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      message_type: "system" | "user" | "assistant"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -351,6 +351,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      message_type: ["system", "user", "assistant"],
+    },
   },
 } as const

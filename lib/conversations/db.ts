@@ -2,6 +2,8 @@ import { RabbitRabbitChatMessage } from "@/app/api/chat/route";
 import { createClient } from "@/lib/supabase/server";
 import { UIMessage } from "ai";
 import { nanoid } from "nanoid";
+import { seedConversation } from "./seedConversation";
+import { Json } from "../supabase/database.types";
 
 export interface Conversation {
   id: string;
@@ -91,7 +93,17 @@ export async function getConversationMessages(
     return [];
   }
 
-  return data || [];
+  if (!data) {
+    return Array<Message>();
+  }
+
+  return data.map((msg) => {
+    return {
+      ...msg,
+      metadata: msg.metadata as Record<string, any> | null,
+      parts: msg.parts as UIMessage["parts"],
+    };
+  });
 }
 
 /**
@@ -117,7 +129,27 @@ export async function createConversation(
     return null;
   }
 
+  // add contextual message for this conversation
+  await seedConversation(userId, data.id);
+
   return data;
+}
+
+// Helper function to convert UIMessage to database format
+function convertUIMessageToDBFormat(
+  message: UIMessage,
+  conversationId: string
+) {
+  return {
+    id: message.id === "" ? nanoid() : message.id,
+    conversation_id: conversationId,
+    role: message.role,
+    parts: JSON.parse(JSON.stringify(message.parts)) as Json,
+    metadata:
+      message.metadata && Object.keys(message.metadata).length > 0
+        ? (JSON.parse(JSON.stringify(message.metadata)) as Json)
+        : null,
+  };
 }
 
 /**
@@ -129,16 +161,17 @@ export async function saveMessages(
 ) {
   const supabase = await createClient();
 
-  await supabase.from("messages").upsert(
-    messages.map((m) => ({
-      id: m.id === "" ? nanoid() : m.id, // server-generated stable id
-      conversation_id: conversationId,
-      role: m.role,
-      parts: m.parts, // full parts, as-is
-      metadata: m.metadata ?? null,
-    })),
-    { onConflict: "id", ignoreDuplicates: true }
+  const dbMessages = messages.map((m) =>
+    convertUIMessageToDBFormat(m, conversationId)
   );
+
+  const { error } = await supabase
+    .from("messages")
+    .upsert(dbMessages, { onConflict: "id", ignoreDuplicates: true });
+
+  if (error) {
+    throw new Error(`Failed to save messages: ${error.message}`);
+  }
 }
 
 /**

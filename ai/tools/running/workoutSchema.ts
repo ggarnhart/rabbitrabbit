@@ -7,6 +7,9 @@ export const CreateWorkoutSchema = z.object({
   workoutProvider: z.literal("RabbitRabbit"),
   workoutSourceId: z.string().describe("Unique Identifier from RabbitRabbit"),
   segments: z.array(RunningSegmentSchema),
+  conversationId: z
+    .string()
+    .describe("Conversation ID associated with the workout"),
 });
 
 export type CreateWorkoutType = z.infer<typeof CreateWorkoutSchema>;

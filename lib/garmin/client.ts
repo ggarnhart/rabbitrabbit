@@ -56,6 +56,8 @@ export class GarminClient {
     const clientSecret = process.env.GARMIN_CLIENT_SECRET;
     const redirectUri = process.env.GARMIN_REDIRECT_URI;
 
+    console.log(clientId, clientSecret, redirectUri);
+
     if (!clientId || !clientSecret || !redirectUri) {
       throw new Error(
         "Missing Garmin credentials. Please set GARMIN_CLIENT_ID, GARMIN_CLIENT_SECRET, and GARMIN_REDIRECT_URI environment variables."
@@ -318,35 +320,176 @@ export class GarminClient {
       .eq("id", this.userId);
   }
 
-  // /**
-  //  * Import a workout to Garmin Connect
-  //  * You'll need to implement this based on Garmin's workout import API
-  //  */
-  // async importWorkout(workoutData: any): Promise<void> {
-  //   // TODO: Implement workout import
-  //   // The exact endpoint and payload format will depend on Garmin's workout import API
-  //   // which should be documented in their developer documentation
+  // ============================================
+  // TRAINING API - Workouts
+  // ============================================
 
-  //   const response = await this.makeAuthenticatedRequest(
-  //     "https://apis.garmin.com/wellness-api/rest/workout/import",
-  //     {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(workoutData),
-  //     }
-  //   );
+  /**
+   * Create a new workout in Garmin Connect
+   * @param workoutData Workout data in Garmin format (without workoutId)
+   * @returns The created workout with assigned workoutId
+   */
+  async createWorkout(workoutData: any): Promise<any> {
+    const response = await this.makeAuthenticatedRequest<any>(
+      "https://apis.garmin.com/workoutportal/workout/v2",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(workoutData),
+      }
+    );
 
-  //   // Track the export in your database
-  //   const supabase = await createClient();
-  //   await supabase.from("garmin_exports").insert({
-  //     user_id: this.userId,
-  //     workout_id: workoutData.id,
-  //   });
+    // Track the export in your database
+    const supabase = await createClient();
+    await supabase.from("garmin_exports").insert({
+      user_id: this.userId,
+      workout_id: response.workoutId,
+    });
 
-  //   return response;
-  // }
+    return response;
+  }
+
+  /**
+   * Retrieve a workout by ID
+   * @param workoutId The Garmin workout ID
+   * @returns The workout data
+   */
+  async getWorkout(workoutId: number): Promise<any> {
+    return this.makeAuthenticatedRequest<any>(
+      `https://apis.garmin.com/training-api/workout/v2/${workoutId}`
+    );
+  }
+
+  /**
+   * Update an existing workout
+   * @param workoutId The Garmin workout ID
+   * @param workoutData Complete updated workout data
+   * @returns The updated workout
+   */
+  async updateWorkout(workoutId: number, workoutData: any): Promise<any> {
+    return this.makeAuthenticatedRequest<any>(
+      `https://apis.garmin.com/training-api/workout/v2/${workoutId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(workoutData),
+      }
+    );
+  }
+
+  /**
+   * Delete a workout
+   * @param workoutId The Garmin workout ID
+   */
+  async deleteWorkout(workoutId: number): Promise<void> {
+    await this.makeAuthenticatedRequest(
+      `https://apis.garmin.com/training-api/workout/v2/${workoutId}`,
+      {
+        method: "DELETE",
+      }
+    );
+  }
+
+  // ============================================
+  // TRAINING API - Workout Schedules
+  // ============================================
+
+  /**
+   * Schedule a workout for a specific date
+   * @param schedule Object with workoutId and date (YYYY-MM-DD)
+   * @returns The created schedule
+   */
+  async createWorkoutSchedule(schedule: {
+    workoutId: number;
+    date: string;
+  }): Promise<any> {
+    return this.makeAuthenticatedRequest<any>(
+      "https://apis.garmin.com/training-api/schedule/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(schedule),
+      }
+    );
+  }
+
+  /**
+   * Retrieve a workout schedule by ID
+   * @param scheduleId The schedule ID
+   * @returns The schedule data
+   */
+  async getWorkoutSchedule(scheduleId: number): Promise<any> {
+    return this.makeAuthenticatedRequest<any>(
+      `https://apis.garmin.com/training-api/schedule/${scheduleId}`
+    );
+  }
+
+  /**
+   * Update a workout schedule
+   * @param scheduleId The schedule ID
+   * @param schedule Updated schedule data
+   * @returns The updated schedule
+   */
+  async updateWorkoutSchedule(
+    scheduleId: number,
+    schedule: { workoutId: number; date: string }
+  ): Promise<any> {
+    return this.makeAuthenticatedRequest<any>(
+      `https://apis.garmin.com/training-api/schedule/${scheduleId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(schedule),
+      }
+    );
+  }
+
+  /**
+   * Delete a workout schedule
+   * @param scheduleId The schedule ID
+   */
+  async deleteWorkoutSchedule(scheduleId: number): Promise<void> {
+    await this.makeAuthenticatedRequest(
+      `https://apis.garmin.com/training-api/schedule/${scheduleId}`,
+      {
+        method: "DELETE",
+      }
+    );
+  }
+
+  /**
+   * Retrieve workout schedules within a date range
+   * @param startDate Start date in YYYY-MM-DD format
+   * @param endDate End date in YYYY-MM-DD format
+   * @returns Array of scheduled workouts
+   */
+  async getWorkoutSchedulesByDateRange(
+    startDate: string,
+    endDate: string
+  ): Promise<any[]> {
+    return this.makeAuthenticatedRequest<any[]>(
+      `https://apis.garmin.com/training-api/schedule?startDate=${startDate}&endDate=${endDate}`
+    );
+  }
+
+  /**
+   * Get Training API specific permissions for this user
+   * Note: This is different from the wellness API permissions
+   * @returns Array of permission strings (e.g., ["WORKOUT_IMPORT"])
+   */
+  async getTrainingPermissions(): Promise<string[]> {
+    return this.makeAuthenticatedRequest<string[]>(
+      "https://apis.garmin.com/userPermissions/"
+    );
+  }
 
   /**
    * Check if user is authenticated with Garmin

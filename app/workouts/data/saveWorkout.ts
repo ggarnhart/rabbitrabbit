@@ -53,11 +53,26 @@ export const saveWorkout = async (
         );
       }
 
-      // Import workout to Garmin
-      // await garminClient.importWorkout({
-      //   id: data[0].id,
-      //   ...workout,
-      // });
+      // Check if user has WORKOUT_IMPORT permission
+      const permissions = await garminClient.getTrainingPermissions();
+      if (!permissions.includes("WORKOUT_IMPORT")) {
+        throw new Error(
+          "User has not granted WORKOUT_IMPORT permission to RabbitRabbit."
+        );
+      }
+
+      // Create workout in Garmin Connect
+      // Note: You'll need to transform your workout schema to Garmin's format
+      // The createWorkout method expects Garmin's workout format with segments/steps
+      const resultingWorkout = await garminClient.createWorkout({
+        workoutName: workout.workoutName,
+        description: workout.description,
+        sport: workout.sport,
+        workoutProvider: workout.workoutProvider,
+        workoutSourceId: workout.workoutSourceId,
+        segments: workout.segments,
+      });
+      console.log(resultingWorkout);
     }
 
     return data;

@@ -126,107 +126,112 @@ const ChatInterface = ({
                 icon={<MessageCircle className="size-12" />}
               />
             ) : (
-              messages.map((message, messageIndex) => {
-                // Check if this is the last message and if we're currently streaming
-                const isLastMessage = messageIndex === messages.length - 1;
-                const isStreamingMessage =
-                  isLastMessage && (status === "submitted" || status === "streaming");
+              messages
+                .filter((m) => m.role !== "system")
+                .map((message, messageIndex) => {
+                  // Check if this is the last message and if we're currently streaming
+                  const isLastMessage = messageIndex === messages.length - 1;
+                  const isStreamingMessage =
+                    isLastMessage &&
+                    (status === "submitted" || status === "streaming");
 
-                return (
-                  <Message key={message.id} from={message.role}>
-                    <MessageContent>
-                      {message.parts.map((part, index) => {
-                        switch (part.type) {
-                          case "text":
-                            return <Response key={index}>{part.text}</Response>;
-
-                          case "reasoning":
-                            return (
-                              <Reasoning
-                                key={index}
-                                isStreaming={isStreamingMessage}
-                              >
-                                <ReasoningTrigger />
-                                <ReasoningContent>
-                                  {(part as any).text || ""}
-                                </ReasoningContent>
-                              </Reasoning>
-                            );
-
-                        case "tool-convertPaceTool":
-                          switch (part.state) {
-                            case "output-available":
+                  return (
+                    <Message key={message.id} from={message.role}>
+                      <MessageContent>
+                        {message.parts.map((part, index) => {
+                          switch (part.type) {
+                            case "text":
                               return (
-                                <Response key={part.toolCallId}>
-                                  Pace converted
-                                </Response>
+                                <Response key={index}>{part.text}</Response>
                               );
 
-                            case "input-available":
-                            case "input-streaming":
+                            case "reasoning":
+                              return (
+                                <Reasoning
+                                  key={index}
+                                  isStreaming={isStreamingMessage}
+                                >
+                                  <ReasoningTrigger />
+                                  <ReasoningContent>
+                                    {(part as any).text || ""}
+                                  </ReasoningContent>
+                                </Reasoning>
+                              );
+
+                            case "tool-convertPaceTool":
+                              switch (part.state) {
+                                case "output-available":
+                                  return (
+                                    <Response key={part.toolCallId}>
+                                      Pace converted
+                                    </Response>
+                                  );
+
+                                case "input-available":
+                                case "input-streaming":
+                                default:
+                                  return (
+                                    <Response key={part.toolCallId}>
+                                      Converting Pace...
+                                    </Response>
+                                  );
+                              }
+                            case "tool-generateSingleRunningStepTool":
+                              switch (part.state) {
+                                case "input-available":
+                                case "input-streaming":
+                                default:
+                                  return (
+                                    <Response key={part.toolCallId}>
+                                      Generating Step...
+                                    </Response>
+                                  );
+                              }
+                            case "tool-generateRunningSegmentTool":
+                              switch (part.state) {
+                                case "input-available":
+                                case "input-streaming":
+                                default:
+                                  return (
+                                    <Response key={part.toolCallId}>
+                                      Generating Segment...
+                                    </Response>
+                                  );
+                              }
+                            case "tool-generateRunningWorkoutTool":
+                              switch (part.state) {
+                                case "output-available":
+                                  return (
+                                    <Response key={`${part.toolCallId}-output`}>
+                                      {JSON.stringify(part.output, null, 2)}
+                                    </Response>
+                                  );
+
+                                case "input-available":
+                                case "input-streaming":
+                                default:
+                                  return (
+                                    <Response key={part.toolCallId}>
+                                      Generating Workout...
+                                    </Response>
+                                  );
+                              }
+
+                            case "step-start":
+                              // case "step-finish":
+                              // These are metadata parts, don't render them
+                              return null;
+
                             default:
-                              return (
-                                <Response key={part.toolCallId}>
-                                  Converting Pace...
-                                </Response>
-                              );
+                              // Log unknown parts for debugging
+                              console.log("Unknown part type:", part.type);
+                              return null;
                           }
-                        case "tool-generateSingleRunningStepTool":
-                          switch (part.state) {
-                            case "input-available":
-                            case "input-streaming":
-                            default:
-                              return (
-                                <Response key={part.toolCallId}>
-                                  Generating Step...
-                                </Response>
-                              );
-                          }
-                        case "tool-generateRunningSegmentTool":
-                          switch (part.state) {
-                            case "input-available":
-                            case "input-streaming":
-                            default:
-                              return (
-                                <Response key={part.toolCallId}>
-                                  Generating Segment...
-                                </Response>
-                              );
-                          }
-                        case "tool-generateRunningWorkoutTool":
-                          switch (part.state) {
-                            case "output-available":
-                              return (
-                                <Response key={`${part.toolCallId}-output`}>
-                                  {JSON.stringify(part.output, null, 2)}
-                                </Response>
-                              );
-
-                            case "input-available":
-                            case "input-streaming":
-                            default:
-                              return (
-                                <Response key={part.toolCallId}>
-                                  Generating Workout...
-                                </Response>
-                              );
-                          }
-
-                        case "step-start":
-                        case "step-finish":
-                          // These are metadata parts, don't render them
-                          return null;
-
-                        default:
-                          // Log unknown parts for debugging
-                          console.log("Unknown part type:", part.type);
-                          return null;
-                        }
-                      })}
-                    </MessageContent>
-                  </Message>
-                );
-              })
+                        })}
+                      </MessageContent>
+                    </Message>
+                  );
+                })
             )}
           </ConversationContent>
           <ConversationScrollButton />
