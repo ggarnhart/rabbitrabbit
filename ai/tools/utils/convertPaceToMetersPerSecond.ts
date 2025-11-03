@@ -9,9 +9,17 @@ type PaceUnit = "miles" | "km" | "meters/second";
 export function convertPaceToMetersPerSecond(
   pace: string,
   unit: PaceUnit
-): number {
+): {
+  goalPace: number;
+  targetValueLow: number;
+  targetValueHigh: number;
+} {
   if (unit === "meters/second") {
-    return parseFloat(pace);
+    return {
+      goalPace: parseFloat(pace),
+      targetValueLow: parseFloat(pace) - 0.05,
+      targetValueHigh: parseFloat(pace) + 0.05,
+    };
   }
 
   // Parse the pace in min:sec format (e.g., "7:20" or "5:00")
@@ -19,8 +27,10 @@ export function convertPaceToMetersPerSecond(
   const minutes = parseInt(parts[0], 10);
   const seconds = parts.length > 1 ? parseInt(parts[1], 10) : 0;
   const totalSeconds = minutes * 60 + seconds;
+  const fifteenSecondsFaster = totalSeconds - 15;
+  const fifteenSecondsSlower = totalSeconds + 15;
 
-  if (totalSeconds === 0) {
+  if (totalSeconds <= 0) {
     throw new Error("Pace cannot be zero");
   }
 
@@ -36,5 +46,9 @@ export function convertPaceToMetersPerSecond(
   }
 
   // Pace is time per distance, so speed = distance / time
-  return metersPerUnit / totalSeconds;
+  return {
+    goalPace: metersPerUnit / totalSeconds,
+    targetValueLow: metersPerUnit / fifteenSecondsFaster,
+    targetValueHigh: metersPerUnit / fifteenSecondsSlower,
+  };
 }

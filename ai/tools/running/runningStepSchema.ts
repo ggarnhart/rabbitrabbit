@@ -75,6 +75,18 @@ export const RunningStepSchema = z.object({
   targetValue: TargetValue.optional().describe(
     "Included when using HR or Power as TargetType"
   ),
+  targetValueLow: z
+    .number()
+    .optional()
+    .describe(
+      "Lower bound of target range for target. If target is pace, use the `targetValueLow` from generated pace. This is the faster of the two paces."
+    ),
+  targetValueHigh: z
+    .number()
+    .optional()
+    .describe(
+      "Upper bound of target range for target. If target is pace, use the `targetValueHigh` from generated pace. This is the slower of the two paces."
+    ),
 });
 
 export type RunningStep = z.infer<typeof RunningStepSchema>;

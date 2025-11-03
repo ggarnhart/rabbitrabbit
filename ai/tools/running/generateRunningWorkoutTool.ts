@@ -27,9 +27,10 @@ export const generateRunningWorkoutTool = tool({
       .describe(
         "Detailed description of the workout, its goals, and what the athlete will accomplish"
       ),
+    conversationId: z.string().describe("The conversation ID"),
   }),
   outputSchema: CreateWorkoutSchema,
-  execute: async ({ segments, workoutName, description }) => {
+  execute: async ({ segments, workoutName, description, conversationId }) => {
     return {
       workoutName,
       description: description || "",
@@ -37,6 +38,7 @@ export const generateRunningWorkoutTool = tool({
       workoutProvider: "RabbitRabbit" as const,
       workoutSourceId: "RabbitRabbit" as const,
       segments: segments,
+      conversationId,
     };
   },
 });

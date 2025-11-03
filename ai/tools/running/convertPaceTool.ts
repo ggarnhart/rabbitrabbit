@@ -19,12 +19,17 @@ export const convertPaceTool = tool({
       ),
   }),
   outputSchema: z.object({
-    metersPerSecond: z
+    goalPace: z.number().describe("The converted pace in meters per second"),
+    targetValueLow: z
       .number()
-      .describe("The calculated speed in meters per second"),
+      .describe("The lower bound target pace in meters per second"),
+    targetValueHigh: z
+      .number()
+      .describe("The upper bound target pace in meters per second"),
   }),
   execute: async ({ pace, unit }) => {
-    const metersPerSecond = convertPaceToMetersPerSecond(pace, unit);
-    return { metersPerSecond };
+    const { goalPace, targetValueLow, targetValueHigh } =
+      convertPaceToMetersPerSecond(pace, unit);
+    return { goalPace, targetValueLow, targetValueHigh };
   },
 });
