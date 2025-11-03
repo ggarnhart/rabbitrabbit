@@ -15,7 +15,8 @@
       "WebFetch(domain:community.openai.com)",
       "WebFetch(domain:github.com)",
       "Bash(npm outdated:*)",
-      "Bash(npm run types:supabase:*)"
+      "Bash(npm run types:supabase:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []
