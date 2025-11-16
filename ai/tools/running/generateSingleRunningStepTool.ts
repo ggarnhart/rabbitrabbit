@@ -1,5 +1,5 @@
 import { tool } from "ai";
-import { RunningStep, RunningStepSchema } from "./runningStepSchema";
+import { RunningStepSchema } from "./runningStepSchema";
 
 export const generateSingleRunningStepTool = tool({
   name: "generateSingleRunningStep",

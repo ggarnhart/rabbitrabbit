@@ -1,9 +1,7 @@
 import { tool } from "ai";
-import { z } from "zod";
 import {
   RunningRepeatStepInputSchema,
   RunningRepeatStepSchema,
-  RunningStepSchema,
 } from "./runningStepSchema";
 
 export const generateRepetitiveRunningStepTool = tool({
