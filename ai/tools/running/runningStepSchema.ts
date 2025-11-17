@@ -107,6 +107,7 @@ export const RepeatTypeEnum = z.enum([
 export const RunningRepeatStepSchema = z.object({
   type: z.literal("WorkoutRepeatStep"),
   steps: z.array(RunningStepSchema),
+  stepOrder: z.number().describe("The step order in the sequence."),
   skipLastRestStep: z.boolean().default(false),
   repeatValue: z
     .number()
@@ -119,5 +120,10 @@ export const RunningRepeatStepSchema = z.object({
 
 export const RunningRepeatStepInputSchema = RunningRepeatStepSchema.extend({
   context: z.string().describe("Context for the repetitive running step."),
-  stepOrder: z.number().optional().describe("The step number in the sequence."),
+  stepOrder: z
+    .number()
+    .optional()
+    .describe(
+      "The step number in the sequence. Should be the previous step order plus one."
+    ),
 });
