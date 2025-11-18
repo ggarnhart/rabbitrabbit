@@ -49,6 +49,42 @@ export type Database = {
           },
         ]
       }
+      garmin_exercises: {
+        Row: {
+          created_at: string
+          description: string
+          equipment: string[]
+          exercise_category: string
+          exercise_name: string
+          id: number
+          tags: string[]
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          equipment: string[]
+          exercise_category: string
+          exercise_name: string
+          id?: number
+          tags: string[]
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          equipment?: string[]
+          exercise_category?: string
+          exercise_name?: string
+          id?: number
+          tags?: string[]
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       garmin_exports: {
         Row: {
           created_at: string
