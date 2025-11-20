@@ -3,6 +3,10 @@ import {
   runningToolset,
   RunningToolsetTools,
 } from "@/ai/tools/running/runningToolset";
+import {
+  strengthToolset,
+  StrengthToolsetTools,
+} from "@/ai/tools/strength/strengthToolset";
 import { openai } from "@ai-sdk/openai";
 import {
   convertToModelMessages,
@@ -17,10 +21,16 @@ import { anthropic } from "@ai-sdk/anthropic";
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
+// Combine all toolsets
+const allTools = {
+  ...runningToolset,
+  ...strengthToolset,
+};
+
 export type RabbitRabbitChatMessage = UIMessage<
   never,
   UIDataTypes,
-  RunningToolsetTools
+  RunningToolsetTools | StrengthToolsetTools
 >;
 
 export async function POST(req: Request) {
@@ -48,7 +58,7 @@ export async function POST(req: Request) {
     // model: openai("gpt-4.1"),
     model: anthropic("claude-haiku-4-5"),
     system: runningPrompt,
-    tools: runningToolset,
+    tools: allTools,
     messages: modelMessages,
     stopWhen: stepCountIs(100), // Enable multi-step, stop after 100 steps
 
