@@ -6,34 +6,34 @@
 
 
 INSERT INTO garmin_exercises (exercise_category, exercise_name, type, tags, equipment, description)
-VALUES ('POSE', 'ALL_FOURS', 'YOGA', '{}', '{bodyweight}', 'All Fours is a pose exercise. This is a bodyweight exercise.');
+VALUES ('POSE', 'ALL_FOURS', 'YOGA', '{}', '{bodyweight}', 'All Fours (Tabletop) is a foundational yoga pose performed on hands and knees with neutral spine. Balance evenly on all four limbs with shoulders over wrists and hips over knees. This bodyweight pose is a starting position for many yoga sequences and builds body awareness.');
 
 INSERT INTO garmin_exercises (exercise_category, exercise_name, type, tags, equipment, description)
-VALUES ('POSE', 'ANKLE_TO_KNEE', 'YOGA', '{}', '{bodyweight}', 'Ankle To Knee is a pose exercise. This is a bodyweight exercise.');
+VALUES ('POSE', 'ANKLE_TO_KNEE', 'YOGA', '{}', '{bodyweight}', 'Ankle to Knee pose is a deep hip opening yoga pose performed seated or supine. Cross one ankle over the opposite knee, creating a figure-four shape, then gently fold forward. This bodyweight pose deeply stretches the hips and glutes.');
 
 INSERT INTO garmin_exercises (exercise_category, exercise_name, type, tags, equipment, description)
-VALUES ('POSE', 'BABY_COBRA', 'YOGA', '{}', '{bodyweight}', 'Baby Cobra is a pose exercise. This is a bodyweight exercise.');
+VALUES ('POSE', 'BABY_COBRA', 'YOGA', '{}', '{bodyweight}', 'Baby Cobra is a gentle spinal extension yoga pose performed prone. Use hands to lightly push the upper body upward, keeping elbows bent and hips on the floor. This bodyweight pose gently opens the chest and lengthens the spine.');
 
 INSERT INTO garmin_exercises (exercise_category, exercise_name, type, tags, equipment, description)
-VALUES ('POSE', 'BOAT', 'YOGA', '{}', '{bodyweight}', 'Boat is a pose exercise. This is a bodyweight exercise.');
+VALUES ('POSE', 'BOAT', 'YOGA', '{}', '{bodyweight}', 'Boat (Navasana) is a core strengthening yoga pose performed supine with legs extended. Lift the chest and legs simultaneously, balancing on the sitting bones while maintaining a straight spine. This bodyweight pose builds core strength and balance.');
 
 INSERT INTO garmin_exercises (exercise_category, exercise_name, type, tags, equipment, description)
-VALUES ('POSE', 'BOUND_ANGLE', 'YOGA', '{}', '{bodyweight}', 'Bound Angle is a pose exercise. This is a bodyweight exercise.');
+VALUES ('POSE', 'BOUND_ANGLE', 'YOGA', '{}', '{bodyweight}', 'Bound Angle (Baddha Konasana) is a hip opening yoga pose performed seated. Draw the soles of the feet together with knees bent outward, then gently fold forward. This bodyweight pose deeply opens the hips and groin.');
 
 INSERT INTO garmin_exercises (exercise_category, exercise_name, type, tags, equipment, description)
-VALUES ('POSE', 'BOUND_SEATED_SINGLE_LEG_FORWARD_BEND', 'YOGA', '{unilateral}', '{bodyweight}', 'Bound Seated Single Leg Forward Bend is a pose exercise. This is a bodyweight exercise. This unilateral exercise helps improve balance and address muscle imbalances.');
+VALUES ('POSE', 'BOUND_SEATED_SINGLE_LEG_FORWARD_BEND', 'YOGA', '{unilateral}', '{bodyweight}', 'Bound Seated Single Leg Forward Bend is a unilateral hamstring stretch yoga pose. Sit with one leg extended and fold forward while binding the hands around the foot. This unilateral bodyweight pose improves balance, addresses muscle imbalances, and stretches the hamstrings.');
 
 INSERT INTO garmin_exercises (exercise_category, exercise_name, type, tags, equipment, description)
-VALUES ('POSE', 'BOW', 'YOGA', '{}', '{bodyweight}', 'Bow is a pose exercise. This is a bodyweight exercise.');
+VALUES ('POSE', 'BOW', 'YOGA', '{}', '{bodyweight}', 'Bow (Dhanurasana) is an intense back extension yoga pose performed prone. Bend the knees and reach back to hold the ankles, lifting the chest and thighs off the floor. This bodyweight pose strengthens the entire back body and opens the chest.');
 
 INSERT INTO garmin_exercises (exercise_category, exercise_name, type, tags, equipment, description)
-VALUES ('POSE', 'BOWED_HALF_MOON', 'YOGA', '{}', '{bodyweight}', 'Bowed Half Moon is a pose exercise. This is a bodyweight exercise.');
+VALUES ('POSE', 'BOWED_HALF_MOON', 'YOGA', '{}', '{bodyweight}', 'Bowed Half Moon is a lateral extension yoga pose combining balance with side stretch. Stand on one leg and reach the opposite arm overhead while bowing the torso. This bodyweight pose builds balance and opens the side body.');
 
 INSERT INTO garmin_exercises (exercise_category, exercise_name, type, tags, equipment, description)
-VALUES ('POSE', 'BRIDGE', 'YOGA', '{}', '{bodyweight}', 'Bridge is a pose exercise. This is a bodyweight exercise.');
+VALUES ('POSE', 'BRIDGE', 'YOGA', '{}', '{bodyweight}', 'Bridge (Setu Bandhasana) is a glute and back strengthening yoga pose performed supine. Lift the hips high while pressing the feet and arms firmly into the floor. This bodyweight pose strengthens the entire posterior chain and opens the front body.');
 
 INSERT INTO garmin_exercises (exercise_category, exercise_name, type, tags, equipment, description)
-VALUES ('POSE', 'CAT', 'YOGA', '{}', '{bodyweight}', 'Cat is a pose exercise. This is a bodyweight exercise.');
+VALUES ('POSE', 'CAT', 'YOGA', '{}', '{bodyweight}', 'Cat (Marjaryasana) is a spinal flexion yoga pose performed on all fours. Round the spine upward, tuck the chin, and draw the navel toward the spine. This bodyweight pose releases back tension and coordinates breath with movement.');
 
 INSERT INTO garmin_exercises (exercise_category, exercise_name, type, tags, equipment, description)
 VALUES ('POSE', 'CHAIR', 'YOGA', '{}', '{bodyweight}', 'Chair is a pose exercise. This is a bodyweight exercise.');
