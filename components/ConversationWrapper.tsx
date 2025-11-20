@@ -217,6 +217,39 @@ const ChatInterface = ({
                                   );
                               }
 
+                            case "tool-findExercisesTool":
+                              switch (part.state) {
+                                case "output-available":
+                                  const exercises = (part.output as any)?.exercises || [];
+                                  return (
+                                    <Response key={`${part.toolCallId}-output`}>
+                                      <div className="space-y-2">
+                                        <p className="font-semibold">
+                                          Found {exercises.length} exercise{exercises.length !== 1 ? 's' : ''}:
+                                        </p>
+                                        {exercises.map((ex: any, idx: number) => (
+                                          <div key={idx} className="pl-4 border-l-2 border-indigo-500">
+                                            <p className="font-medium">{ex.exerciseName}</p>
+                                            <p className="text-sm text-muted-foreground">{ex.description}</p>
+                                            <p className="text-xs text-muted-foreground mt-1">
+                                              Equipment: {ex.equipment.join(', ')}
+                                            </p>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </Response>
+                                  );
+
+                                case "input-available":
+                                case "input-streaming":
+                                default:
+                                  return (
+                                    <Response key={part.toolCallId}>
+                                      Finding exercises...
+                                    </Response>
+                                  );
+                              }
+
                             case "step-start":
                               // case "step-finish":
                               // These are metadata parts, don't render them
