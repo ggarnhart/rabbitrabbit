@@ -139,7 +139,10 @@ const ChatInterface = ({
                     <Message key={message.id} from={message.role}>
                       <MessageContent>
                         {message.parts.map((part, index) => {
-                          switch (part.type) {
+                          // Handle tool calls separately with type assertion
+                          const partType = (part as any).type as string;
+
+                          switch (partType) {
                             case "text":
                               return (
                                 <Response key={index}>{part.text}</Response>
