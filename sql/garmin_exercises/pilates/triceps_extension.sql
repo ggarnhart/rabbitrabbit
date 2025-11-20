@@ -6,4 +6,4 @@
 
 
 INSERT INTO garmin_exercises (exercise_category, exercise_name, type, tags, equipment, description)
-VALUES ('TRICEPS_EXTENSION', 'TRICEPS_PRESS', 'PILATES', '{triceps,push}', '{bodyweight}', 'Triceps Press is a triceps extension exercise targeting the triceps. This is a bodyweight exercise.');
+VALUES ('TRICEPS_EXTENSION', 'TRICEPS_PRESS', 'PILATES', '{triceps,push}', '{bodyweight}', 'A triceps-focused pushing exercise performed with arms extended and bent, targeting the back of the upper arms. This controlled movement isolates the triceps muscles while maintaining proper shoulder alignment. The exercise builds triceps strength, improves arm definition, and develops upper body pushing power.');
