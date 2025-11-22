@@ -27,5 +27,5 @@ export const BuildGarminExerciseWorkoutToolSchema = z.object({
         description: z.string(),
       })
     )
-    .describe("Chose list of Garmin Exercises to include in the workout."),
+    .describe("Chosen list of Garmin Exercises to include in the workout."),
 });

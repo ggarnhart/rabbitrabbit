@@ -1,8 +1,8 @@
 import { tool } from "ai";
-import { BuildGarminExerciseWorkoutToolSchema } from "./buildGarminExerciseWorkoutToolSchema";
+import { BuildGarminExerciseWorkoutToolSchema } from "./selectGarminExercisesWorkoutToolSchema";
 
-export const buildGarminExerciseWorkoutTool = tool({
-  name: "buildGarminExerciseWorkoutTool",
+export const selectGarminExercisesWorkoutTool = tool({
+  name: "selectGarminExercisesWorkoutTool",
   description:
     "Builds a Garmin Exercise Workout based on user request and available Garmin Exercises.",
   inputSchema: BuildGarminExerciseWorkoutToolSchema,

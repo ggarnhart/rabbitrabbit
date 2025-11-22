@@ -3,7 +3,6 @@ import {
   runningToolset,
   RunningToolsetTools,
 } from "@/ai/tools/running/runningToolset";
-import { openai } from "@ai-sdk/openai";
 import {
   convertToModelMessages,
   stepCountIs,
