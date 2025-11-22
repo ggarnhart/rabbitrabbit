@@ -1,4 +1,4 @@
-import { runningPrompt } from "@/ai/systemPrompts/runningPrompt";
+import { systemPrompt } from "@/ai/systemPrompts/systemPrompt";
 import {
   runningToolset,
   RunningToolsetTools,
@@ -13,6 +13,7 @@ import {
 } from "ai";
 import { saveMessages } from "@/lib/conversations/db";
 import { anthropic } from "@ai-sdk/anthropic";
+import { garminWorkoutToolset } from "@/ai/tools/garminWorkouts/garminWorkoutToolset";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -47,8 +48,8 @@ export async function POST(req: Request) {
   const result = streamText({
     // model: openai("gpt-4.1"),
     model: anthropic("claude-haiku-4-5"),
-    system: runningPrompt,
-    tools: runningToolset,
+    system: systemPrompt,
+    tools: { ...runningToolset, ...garminWorkoutToolset },
     messages: modelMessages,
     stopWhen: stepCountIs(100), // Enable multi-step, stop after 100 steps
 
