@@ -217,6 +217,105 @@ const ChatInterface = ({
                                   );
                               }
 
+                            case "tool-getExerciseCategoriesTool":
+                              switch (part.state) {
+                                case "input-available":
+                                case "input-streaming":
+                                default:
+                                  return (
+                                    <Response key={part.toolCallId}>
+                                      Getting exercise categories...
+                                    </Response>
+                                  );
+                              }
+
+                            case "tool-getGarminExercises":
+                              switch (part.state) {
+                                case "input-available":
+                                case "input-streaming":
+                                default:
+                                  return (
+                                    <Response key={part.toolCallId}>
+                                      Getting exercises...
+                                    </Response>
+                                  );
+                              }
+
+                            case "tool-generateSingleStepGarminWorkoutTool":
+                              switch (part.state) {
+                                case "input-available":
+                                case "input-streaming":
+                                default:
+                                  return (
+                                    <Response key={part.toolCallId}>
+                                      Generating Step...
+                                    </Response>
+                                  );
+                              }
+
+                            case "tool-generateRepetitiveGarminWorkoutStepTool":
+                              switch (part.state) {
+                                case "input-available":
+                                case "input-streaming":
+                                default:
+                                  return (
+                                    <Response key={part.toolCallId}>
+                                      Generating Repetitive Step...
+                                    </Response>
+                                  );
+                              }
+
+                            case "tool-generateGarminWorkoutSegmentTool":
+                              switch (part.state) {
+                                case "input-available":
+                                case "input-streaming":
+                                default:
+                                  return (
+                                    <Response key={part.toolCallId}>
+                                      Generating Segment...
+                                    </Response>
+                                  );
+                              }
+
+                            case "tool-generateGarminWorkoutTool":
+                              switch (part.state) {
+                                case "output-available":
+                                  return (
+                                    <Response key={`${part.toolCallId}-output`}>
+                                      {JSON.stringify(part.output, null, 2)}
+                                    </Response>
+                                  );
+
+                                case "input-available":
+                                case "input-streaming":
+                                default:
+                                  return (
+                                    <Response key={part.toolCallId}>
+                                      Generating Workout...
+                                    </Response>
+                                  );
+                              }
+
+                            case "tool-saveToGarminTool":
+                              switch (part.state) {
+                                case "output-available":
+                                  return (
+                                    <Response key={`${part.toolCallId}-output`}>
+                                      Attempted to send workout to your Garmin
+                                      device!
+                                    </Response>
+                                  );
+
+                                case "input-available":
+                                case "input-streaming":
+                                default:
+                                  return (
+                                    <Response key={part.toolCallId}>
+                                      Sending to Garmin...
+                                    </Response>
+                                  );
+                              }
+
                             case "step-start":
                               // case "step-finish":
                               // These are metadata parts, don't render them
