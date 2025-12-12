@@ -305,6 +305,7 @@ export class GarminClient {
     options: RequestInit = {}
   ): Promise<T> {
     const accessToken = await this.getValidAccessToken();
+    console.log(accessToken);
 
     const response = await fetch(url, {
       ...options,

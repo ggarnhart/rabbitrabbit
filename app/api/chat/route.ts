@@ -1,9 +1,8 @@
-import { runningPrompt } from "@/ai/systemPrompts/runningPrompt";
+import { systemPrompt } from "@/ai/systemPrompts/systemPrompt";
 import {
-  runningToolset,
-  RunningToolsetTools,
+  garminToolset,
+  GarminToolset,
 } from "@/ai/tools/running/runningToolset";
-import { openai } from "@ai-sdk/openai";
 import {
   convertToModelMessages,
   stepCountIs,
@@ -20,7 +19,7 @@ export const maxDuration = 30;
 export type RabbitRabbitChatMessage = UIMessage<
   never,
   UIDataTypes,
-  RunningToolsetTools
+  GarminToolset
 >;
 
 export async function POST(req: Request) {
@@ -47,8 +46,8 @@ export async function POST(req: Request) {
   const result = streamText({
     // model: openai("gpt-4.1"),
     model: anthropic("claude-haiku-4-5"),
-    system: runningPrompt,
-    tools: runningToolset,
+    system: systemPrompt,
+    tools: garminToolset,
     messages: modelMessages,
     stopWhen: stepCountIs(100), // Enable multi-step, stop after 100 steps
 

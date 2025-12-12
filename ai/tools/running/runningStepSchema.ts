@@ -9,18 +9,23 @@ export const IntensityEnum = z.enum([
   "INTERVAL",
 ]);
 
-export const DurationTypeEnum = z.enum([
-  "TIME",
-  "DISTANCE",
-  "HR_LESS_THAN",
-  "HR_GREATER_THAN",
-  "CALORIES",
-  "OPEN",
-  "POWER_LESS_THAN",
-  "POWER_GREATER_THAN",
-  "TIME_AT_VALID_CDA",
-  "FIXED_REST",
-]);
+export const DurationTypeEnum = z
+  .enum([
+    "TIME",
+    "DISTANCE",
+    "HR_LESS_THAN",
+    "HR_GREATER_THAN",
+    "CALORIES",
+    "OPEN",
+    "POWER_LESS_THAN",
+    "POWER_GREATER_THAN",
+    "TIME_AT_VALID_CDA",
+    "FIXED_REST",
+    "REPS",
+  ])
+  .describe(
+    "REPS is for HIIT, CARDIO, and STRENGTH_TRAINING workouts. Otherwise, choose one of the other options."
+  );
 
 export const TargetTypeEnum = z
   .enum([
